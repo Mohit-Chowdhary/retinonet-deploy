@@ -288,11 +288,6 @@ def load_model():
     model.to(DEVICE)
     model.eval()
     
-    with torch.no_grad():
-        dummy_input = torch.randn(1, 3, 224, 224).to(DEVICE)
-        dummy_output = model(dummy_input)
-        print(f"✓ Model warmup complete\n")
-    
     print(f"{'='*50}\n")
     return model
     
@@ -302,7 +297,10 @@ model = load_model()
 # For EfficientNet, use the last convolutional block
 try:
     target_layer = model.conv_head if hasattr(model, 'conv_head') else model.blocks[-1]
-    gradcam = GradCAM(model, target_layer)
+    #gradcam = GradCAM(model, target_layer)
+    #gradcam too harsh to deploy
+    gradcam = None
+
     print("✓ Grad-CAM initialized successfully\n")
 except Exception as e:
     print(f"⚠ Grad-CAM initialization warning: {e}\n")
